@@ -1,4 +1,4 @@
-# PIPEWITNESS
+# SinkProof
 
 > **Executable contracts for telemetry pipelines — proven against a real OpenTelemetry Collector, with mutation testing to prove the tests work.**
 
@@ -15,10 +15,10 @@ Nobody verifies before deployment that:
 - The right records reach the right destination and noise is filtered out.
 - The verification tests would actually catch a regression if someone made a typo or deleted a redaction block.
 
-**PIPEWITNESS solves this with three primitives:**
+**SinkProof solves this with three primitives:**
 1. **Telemetry Contract IR:** A declarative YAML format of machine-checkable invariants over pipeline output verified deterministically against captured output of a **real** OpenTelemetry Collector run.
 2. **Telemetry Mutation Engine & Mutation Score:** Structure-aware mutations of the Collector config to prove test suite adequacy (`Score = killed / (killed + survived)`).
-3. **Static Fault Localisation:** When a contract fails, PIPEWITNESS pinpoints the pipeline path and identifies which processors do or do not reference the offending key.
+3. **Static Fault Localisation:** When a contract fails, SinkProof pinpoints the pipeline path and identifies which processors do or do not reference the offending key.
 
 ---
 
@@ -129,20 +129,20 @@ cp .env.example .env
 
 ### Running Commands
 ```bash
-# Verify vulnerable config
-pipewitness verify -c examples/checkout/collector.vulnerable.yaml -k examples/checkout/contracts.yaml -t examples/checkout/telemetry.yaml
+# Verify vulnerable config (reproduces 4 PASS, 3 FAIL)
+sinkproof verify -c examples/checkout/collector.vulnerable.yaml -k examples/checkout/contracts.yaml -t examples/checkout/telemetry.yaml
 
-# Verify fixed config
-pipewitness verify -c examples/checkout/collector.fixed.yaml -k examples/checkout/contracts.yaml -t examples/checkout/telemetry.yaml
+# Verify fixed config (reproduces 7 PASS, 0 FAIL)
+sinkproof verify -c examples/checkout/collector.fixed.yaml -k examples/checkout/contracts.yaml -t examples/checkout/telemetry.yaml
 
-# Run mutation testing
-pipewitness mutate -c examples/checkout/collector.fixed.yaml -k examples/checkout/contracts.yaml -t examples/checkout/telemetry.yaml
+# Run mutation testing (100% kill score on strong suite)
+sinkproof mutate -c examples/checkout/collector.fixed.yaml -k examples/checkout/contracts.yaml -t examples/checkout/telemetry.yaml
 
 # Compile contracts with Gemma 4
-pipewitness compile -i examples/checkout/architecture.png -r examples/checkout/requirements.txt -c examples/checkout/collector.fixed.yaml -t examples/checkout/telemetry.yaml -o compiled.yaml
+sinkproof compile -i examples/checkout/architecture.png -r examples/checkout/requirements.txt -c examples/checkout/collector.fixed.yaml -t examples/checkout/telemetry.yaml -o compiled.yaml
 
 # Run end-to-end demo
-pipewitness demo
+sinkproof demo
 
 # Launch Streamlit UI
 streamlit run app.py

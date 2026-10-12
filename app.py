@@ -1,4 +1,4 @@
-"""PIPEWITNESS — Streamlit Interactive Web Application."""
+"""SinkProof — Streamlit Interactive Web Application."""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from pipewitness.verify import verify_suite
 
 # Set page config
 st.set_page_config(
-    page_title="PIPEWITNESS — Telemetry Contract Testing",
+    page_title="SinkProof — Telemetry Contract Testing",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded",
@@ -80,7 +80,7 @@ if "mutation_result_weak" not in st.session_state:
 collector_img = os.getenv("PW_COLLECTOR_IMAGE", "otel/opentelemetry-collector-contrib:latest")
 col_b1, col_b2 = st.columns([3, 1])
 with col_b1:
-    st.title("🛡️ PIPEWITNESS")
+    st.title("🛡️ SinkProof")
     st.caption("Executable contracts for telemetry pipelines — proven against a real OpenTelemetry Collector.")
 with col_b2:
     st.markdown(f"""

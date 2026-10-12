@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "pipewitness"
+name = "sinkproof"
 version = "0.1.0"
-description = "Executable contracts for telemetry pipelines — proven against a real OpenTelemetry Collector, with mutation testing."
+description = "SinkProof — Executable contracts for telemetry pipelines — proven against a real OpenTelemetry Collector, with mutation testing."
 readme = "README.md"
 license = "Apache-2.0"
 requires-python = ">=3.11"
@@ -22,6 +22,7 @@ dependencies = [
 ]
 
 [project.scripts]
+sinkproof = "pipewitness.cli:app"
 pipewitness = "pipewitness.cli:app"
 
 [tool.setuptools.packages.find]

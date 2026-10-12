@@ -1,4 +1,4 @@
-# Project Name: PIPEWITNESS
+# Project Name: SinkProof
 
 > **Telemetry contract testing harness for OpenTelemetry Collector pipelines using Gemma 4 multimodal compilation and deterministic verification.**
 
@@ -22,15 +22,15 @@
 
 ## Repository & License
 
-- **Public Repository URL:** [https://github.com/Saisharathchandranandnetha/pipewitness](https://github.com/Saisharathchandranandnetha/pipewitness)
+- **Public Repository URL:** [https://github.com/Saisharathchandranandnetha/sinkproof](https://github.com/Saisharathchandranandnetha/sinkproof)
 - **License:** Apache License 2.0 (OSI-approved)
-- **Local Demo:** Run via `streamlit run app.py` (accessible at `http://localhost:8501`) or CLI `pipewitness verify --config examples/checkout/vulnerable.yaml --telemetry examples/checkout/fixtures.yaml --contracts examples/checkout/contracts.json`
+- **Local Demo:** Run via `streamlit run app.py` (accessible at `http://localhost:8501`) or CLI `sinkproof verify --config examples/checkout/vulnerable.yaml --telemetry examples/checkout/fixtures.yaml --contracts examples/checkout/contracts.json`
 
 ---
 
 ## Short Pitch
 
-PIPEWITNESS is an open-source contract-testing and mutation framework for OpenTelemetry Collector pipelines. It pairs **Gemma 4** (multimodal architecture ingestion + guarded contract compilation + OTTL patch remediation) with a **deterministic verifier** running a real isolated Collector binary, preventing silent telemetry drops, compliance stripping, and PII leaks before production deployment.
+SinkProof is an open-source contract-testing and mutation framework for OpenTelemetry Collector pipelines. It pairs **Gemma 4** (multimodal architecture ingestion + guarded contract compilation + OTTL patch remediation) with a **deterministic verifier** running a real isolated Collector binary, preventing silent telemetry drops, compliance stripping, and PII leaks before production deployment.
 
 ---
 
@@ -46,7 +46,7 @@ OpenTelemetry Collector pipelines route, redact, and transform mission-critical 
 
 ## The Solution
 
-PIPEWITNESS turns pipeline configs and architecture diagrams into automated, enforceable contracts:
+SinkProof turns pipeline configs and architecture diagrams into automated, enforceable contracts:
 
 1. **Multimodal Contract Compilation (Gemma 4):**
    - Ingests the architecture diagram PNG + requirement text.
@@ -138,8 +138,8 @@ $ pytest -v
 
 ### Option A: Interactive Web UI (Streamlit)
 ```bash
-git clone https://github.com/Saisharathchandranandnetha/pipewitness.git
-cd pipewitness
+git clone https://github.com/Saisharathchandranandnetha/sinkproof.git
+cd sinkproof
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -154,13 +154,13 @@ Open `http://localhost:8501` to view:
 ### Option B: Command-Line Interface
 ```bash
 # Verify against OpenTelemetry Collector
-pipewitness verify \
+sinkproof verify \
   --config examples/checkout/vulnerable.yaml \
   --telemetry examples/checkout/fixtures.yaml \
   --contracts examples/checkout/contracts.json
 
 # Run Mutation Testing
-pipewitness mutate \
+sinkproof mutate \
   --config examples/checkout/fixed.yaml \
   --telemetry examples/checkout/fixtures.yaml \
   --contracts examples/checkout/contracts.json

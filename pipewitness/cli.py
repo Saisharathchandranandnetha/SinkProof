@@ -1,4 +1,4 @@
-"""Command-line interface for PIPEWITNESS."""
+"""Command-line interface for SINKPROOF."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ from pipewitness.fixtures import load_fixtures
 from pipewitness.runner import run_collector, validate_config
 from pipewitness.verify import verify_suite
 
-app = typer.Typer(help="PIPEWITNESS: Pre-deployment telemetry contract testing for OpenTelemetry Collector.")
+app = typer.Typer(help="SINKPROOF: Pre-deployment telemetry contract testing for OpenTelemetry Collector.")
 console = Console()
 
 
