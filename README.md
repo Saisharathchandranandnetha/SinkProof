@@ -6,6 +6,9 @@
 
 Built during **Hacktoberfest Hack Day 2026 — NIAT-KKH × MLH** with **Gemma 4**.
 
+[![Demo Video & Slides](https://img.shields.io/badge/Demo%20Video%20%26%20Slides-Google%20Drive-blue?logo=googledrive)](https://drive.google.com/drive/folders/1biwFHfSvOEO4fLZluHslEvkQuul63nsk?usp=drive_link)
+[![License](https://img.shields.io/badge/License-Apache_2.0-green.svg)](https://opensource.org/licenses/Apache-2.0)
+
 ---
 
 ## Why SinkProof exists
@@ -618,6 +621,8 @@ sinkproof compile \
 ```bash
 streamlit run app.py
 ```
+
+> 🎬 **Demo Video & Presentation Slides:** [Google Drive Folder](https://drive.google.com/drive/folders/1biwFHfSvOEO4fLZluHslEvkQuul63nsk?usp=drive_link)
 
 ---
 
