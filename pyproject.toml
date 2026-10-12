@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pipewitness"
+version = "0.1.0"
+description = "Executable contracts for telemetry pipelines — proven against a real OpenTelemetry Collector, with mutation testing."
+readme = "README.md"
+license = "Apache-2.0"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.0",
+    "ruamel.yaml>=0.18",
+    "httpx>=0.27",
+    "typer[all]>=0.12",
+    "rich>=13.0",
+    "streamlit>=1.35",
+    "google-genai>=1.0",
+    "Pillow>=10.0",
+    "python-dotenv>=1.0",
+]
+
+[project.scripts]
+pipewitness = "pipewitness.cli:app"
+
+[tool.setuptools.packages.find]
+include = ["pipewitness*"]

@@ -1,0 +1,4 @@
+image: otel/opentelemetry-collector-contrib:latest
+version: 0.162.0
+digest: sha256:39923a8e431bd1f57be82411999d389fcfe40857492e4365456d97a4c1f74be6
+tested_os: linux/x86_64

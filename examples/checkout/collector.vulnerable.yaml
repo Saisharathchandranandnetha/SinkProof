@@ -1,0 +1,38 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+
+processors:
+  batch:
+    timeout: 200ms
+  filter/errors_only:
+    error_mode: ignore
+    logs:
+      log_record:
+        - 'severity_number < SEVERITY_NUMBER_ERROR'
+  transform/scrub:
+    error_mode: ignore
+    log_statements:
+      - context: log
+        statements:
+          - delete_key(attributes, "user.password")
+          - delete_matching_keys(attributes, ".*(token|id)$")
+
+exporters:
+  file/siem:
+    path: /captures/siem.jsonl
+  file/analytics:
+    path: /captures/analytics.jsonl
+
+service:
+  pipelines:
+    logs/siem:
+      receivers: [otlp]
+      processors: [filter/errors_only, batch]
+      exporters: [file/siem]
+    logs/analytics:
+      receivers: [otlp]
+      processors: [transform/scrub, batch]
+      exporters: [file/analytics]

@@ -1,0 +1,17 @@
+version: pipewitness/v0
+sinks:
+  siem:      { exporter: file/siem,      external: true }
+  analytics: { exporter: file/analytics, external: true }
+
+contracts:
+  - id: errors-reach-siem
+    type: must_reach
+    sink: siem
+    when: { severity_at_least: ERROR }
+    severity: high
+
+  - id: all-reach-analytics
+    type: must_reach
+    sink: analytics
+    when: { all: true }
+    severity: medium

@@ -1,0 +1,1 @@
+Passwords, auth tokens and customer emails must never leave the collector — for any destination. Every ERROR log must reach the SIEM, and debug noise must not. Analytics needs request.id intact on every log.

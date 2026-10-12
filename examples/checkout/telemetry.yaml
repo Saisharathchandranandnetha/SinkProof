@@ -1,0 +1,41 @@
+canaries:
+  password: PW_CANARY_7f3a91
+  token:    TOKEN_CANARY_b81c42
+  email:    canary.user@pipewitness.invalid
+
+cases:
+  - id: c1
+    severity: ERROR
+    body: "[pw:c1] login failed"
+    trace_id: 5b8efff798038103d269b633813fc60c
+    span_id: eee19b7ec3c1b174
+    resource: { service.name: auth }
+    attributes:
+      pipewitness.case: c1
+      user.password: "${canary.password}"
+      auth.token: "${canary.token}"
+      user.email: "${canary.email}"
+      request.id: req-c1
+  - id: c2
+    severity: INFO
+    body: "[pw:c2] checkout ok"
+    resource: { service.name: checkout }
+    attributes:
+      pipewitness.case: c2
+      request.id: req-c2
+      user.id: u-123
+  - id: c3
+    severity: DEBUG
+    body: "[pw:c3] cache miss"
+    resource: { service.name: checkout }
+    attributes:
+      pipewitness.case: c3
+  - id: c4
+    severity: ERROR
+    body: "[pw:c4] payment declined"
+    trace_id: 0af7651916cd43dd8448eb211c80319c
+    span_id: b7ad6b7169203331
+    resource: { service.name: payments, user.email: "${canary.email}" }
+    attributes:
+      pipewitness.case: c4
+      request.id: req-c4
