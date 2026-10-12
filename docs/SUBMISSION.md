@@ -22,7 +22,7 @@
 
 ## Repository & License
 
-- **Public Repository URL:** [https://github.com/Saisharathchandranandnetha/sinkproof](https://github.com/Saisharathchandranandnetha/sinkproof)
+- **Public Repository URL:** [https://github.com/Saisharathchandranandnetha/SinkProof](https://github.com/Saisharathchandranandnetha/SinkProof)
 - **License:** Apache License 2.0 (OSI-approved)
 - **Local Demo:** Run via `streamlit run app.py` (accessible at `http://localhost:8501`) or CLI `sinkproof verify --config examples/checkout/vulnerable.yaml --telemetry examples/checkout/fixtures.yaml --contracts examples/checkout/contracts.json`
 
@@ -105,7 +105,7 @@ SinkProof turns pipeline configs and architecture diagrams into automated, enfor
   - **UI / Dashboard:** Streamlit (`app.py`) for visual contract evaluation, mutation analysis, and live logs
   - **Testing:** Pytest (21 unit and integration tests)
 - **AI-Assisted Engineering Disclosure:**
-  - Per Hack Day rules (§0 and §23), code scaffolding, test harnesses, and documentation were pair-programmed using Antigravity and Claude Code. The primary product AI is Gemma 4, serving as the multimodal contract compiler and patch generator.
+  - Per Hack Day rules (§0 and §23), code scaffolding, test harnesses, and documentation were developed during the event. The primary product AI is Gemma 4, serving as the multimodal contract compiler and patch generator.
 
 ---
 
@@ -138,8 +138,8 @@ $ pytest -v
 
 ### Option A: Interactive Web UI (Streamlit)
 ```bash
-git clone https://github.com/Saisharathchandranandnetha/sinkproof.git
-cd sinkproof
+git clone https://github.com/Saisharathchandranandnetha/SinkProof.git
+cd SinkProof
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .

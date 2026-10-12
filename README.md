@@ -2,7 +2,7 @@
 
 > **Executable contracts for telemetry pipelines — proven against a real OpenTelemetry Collector, with mutation testing to prove the tests work.**
 
-*Built during the event with AI coding assistants (Antigravity + Claude Code); the AI component of the product is Gemma 4.*
+*Built during Hacktoberfest Hack Day 2026 (NIAT-KKH × MLH); powered by Gemma 4.*
 
 ---
 
@@ -114,8 +114,8 @@ Running mutation testing on `collector.fixed.yaml` with 4 operators (`drop_proce
 
 ### Installation
 ```bash
-git clone https://github.com/netha/pipewitness.git
-cd pipewitness
+git clone https://github.com/Saisharathchandranandnetha/SinkProof.git
+cd SinkProof
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -e .
