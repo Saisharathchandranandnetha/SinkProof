@@ -69,12 +69,58 @@ def _call_gemini_api(img_bytes: bytes, prompt_text: str, model_id: str) -> str:
         return resp.text or ""
 
 
-def _call_repair_api(raw_output: str, errors: list[str], model_id: str) -> str:
+import base64
+import httpx
+
+
+def _call_ollama_api(img_bytes: bytes, prompt_text: str, model_id: str) -> str:
+    """Call Ollama API with vision and JSON format per spec §13.3."""
+    host = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
+    api_key = os.getenv("OLLAMA_API_KEY", "").strip()
+    headers = {"Content-Type": "application/json"}
+    if api_key:
+        headers["Authorization"] = f"Bearer {api_key}"
+
+    b64_img = base64.b64encode(img_bytes).decode("utf-8")
+    payload = {
+        "model": model_id,
+        "prompt": prompt_text,
+        "images": [b64_img],
+        "format": "json",
+        "stream": False,
+        "options": {
+            "num_ctx": 16384,
+            "temperature": 0.0,
+        },
+    }
+    resp = httpx.post(f"{host}/api/generate", json=payload, headers=headers, timeout=120.0)
+    resp.raise_for_status()
+    data = resp.json()
+    return data.get("response", "")
+
+
+def _call_repair_api(raw_output: str, errors: list[str], model_id: str, backend: str = "gemini") -> str:
+    prompt = build_repair_prompt(raw_output, errors)
+    if backend == "ollama":
+        host = os.getenv("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
+        api_key = os.getenv("OLLAMA_API_KEY", "").strip()
+        headers = {"Content-Type": "application/json"}
+        if api_key:
+            headers["Authorization"] = f"Bearer {api_key}"
+        payload = {
+            "model": model_id,
+            "prompt": prompt,
+            "format": "json",
+            "stream": False,
+            "options": {"num_ctx": 16384, "temperature": 0.0},
+        }
+        resp = httpx.post(f"{host}/api/generate", json=payload, headers=headers, timeout=60.0)
+        return resp.json().get("response", "")
+
     from google import genai
     from google.genai import types
 
     client = genai.Client()
-    prompt = build_repair_prompt(raw_output, errors)
     resp = client.models.generate_content(
         model=model_id,
         contents=[prompt],
@@ -117,24 +163,32 @@ def compile_contracts_with_gemma(
     rec_dir.mkdir(parents=True, exist_ok=True)
     rec_file = _recorded_path(rec_dir, input_sha)
 
-    model_id = os.getenv("PW_GEMMA_MODEL", "gemma-4-26b-a4b-it")
+    backend = os.getenv("PW_BACKEND", "gemini").lower()
+    model_id = os.getenv("PW_GEMMA_MODEL", "gemma2:2b" if backend == "ollama" else "gemma-4-26b-a4b-it")
     api_key = os.getenv("GEMINI_API_KEY", "").strip()
+    ollama_key = os.getenv("OLLAMA_API_KEY", "").strip()
 
     raw_response: str = ""
     mode_label: str = ""
 
-    # Attempt live API call if key is present
+    # Attempt live API call if credentials/backend available
     live_success = False
-    if api_key:
+    can_call_live = (backend == "ollama") or bool(api_key)
+
+    if can_call_live:
         try:
             prompt = build_compiler_prompt(req_text, inventory_dict)
-            raw_response = _call_gemini_api(img_bytes, prompt, model_id)
+            if backend == "ollama":
+                raw_response = _call_ollama_api(img_bytes, prompt, model_id)
+            else:
+                raw_response = _call_gemini_api(img_bytes, prompt, model_id)
+
             valid, suite, errors, _ = guard_compiler_output(
                 raw_response, logical_sinks, allowed_canaries, allowed_keys
             )
             if not valid and errors:
                 # 1 repair retry
-                repaired = _call_repair_api(raw_response, errors, model_id)
+                repaired = _call_repair_api(raw_response, errors, model_id, backend=backend)
                 valid, suite, errors, _ = guard_compiler_output(
                     repaired, logical_sinks, allowed_canaries, allowed_keys
                 )
@@ -143,7 +197,7 @@ def compile_contracts_with_gemma(
 
             if valid and suite:
                 live_success = True
-                mode_label = f"LIVE Gemma ({model_id})"
+                mode_label = f"LIVE Gemma ({backend}:{model_id})"
                 # Save to recorded replay cache
                 record_data = {
                     "model": model_id,

@@ -49,6 +49,11 @@ def build_inventory(config_path: Path, telemetry: Path | FixtureSet) -> ConfigIn
 
     # Exporters
     exporters = list(cfg_data.get("exporters", {}).keys())
+    sinks: set[str] = set()
+    for exp in exporters:
+        sinks.add(exp)
+        if "/" in exp:
+            sinks.add(exp.split("/", 1)[1])
 
     # Pipelines
     pipelines_data = cfg_data.get("service", {}).get("pipelines", {})
@@ -76,7 +81,7 @@ def build_inventory(config_path: Path, telemetry: Path | FixtureSet) -> ConfigIn
         res_keys.update(case.resource.keys())
 
     return ConfigInventory(
-        sinks=exporters,
+        sinks=sorted(sinks),
         pipelines=pipelines,
         processors=procs,
         keys_referenced_by_processor=keys_by_proc,
