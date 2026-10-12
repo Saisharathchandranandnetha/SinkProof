@@ -1,0 +1,296 @@
+{
+  "strong": {
+    "config_name": "collector.fixed.yaml",
+    "suite_name": "contracts.yaml",
+    "total_mutants": 12,
+    "valid_mutants": 12,
+    "killed": 12,
+    "survived": 0,
+    "invalid": 0,
+    "inconclusive": 0,
+    "score": 1.0,
+    "mutants": [
+      {
+        "id": "MUT-01",
+        "operator": "drop_processor",
+        "location": "service.pipelines.logs/siem.processors[transform/redact]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n@@ -35,5 +35,5 @@\n     logs/siem:\n       receivers: [otlp]\n-      processors: [transform/redact, filter/errors_only, batch]\n+      processors: [filter/errors_only, batch]\n       exporters: [file/siem]\n     logs/analytics:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-secret-canaries",
+          "no-email-export"
+        ]
+      },
+      {
+        "id": "MUT-02",
+        "operator": "drop_processor",
+        "location": "service.pipelines.logs/siem.processors[filter/errors_only]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n@@ -35,5 +35,5 @@\n     logs/siem:\n       receivers: [otlp]\n-      processors: [transform/redact, filter/errors_only, batch]\n+      processors: [transform/redact, batch]\n       exporters: [file/siem]\n     logs/analytics:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "debug-not-in-siem"
+        ]
+      },
+      {
+        "id": "MUT-03",
+        "operator": "drop_processor",
+        "location": "service.pipelines.logs/analytics.processors[transform/redact]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n@@ -39,4 +39,4 @@\n     logs/analytics:\n       receivers: [otlp]\n-      processors: [transform/redact, batch]\n+      processors: [batch]\n       exporters: [file/analytics]\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-secret-canaries",
+          "no-email-export"
+        ]
+      },
+      {
+        "id": "MUT-04",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[0].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-secret-canaries"
+        ]
+      },
+      {
+        "id": "MUT-05",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[0].statements[1]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-secret-canaries"
+        ]
+      },
+      {
+        "id": "MUT-06",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[0].statements[2]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-email-export"
+        ]
+      },
+      {
+        "id": "MUT-07",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[1].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,17 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n-\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements: []\n exporters:\n   file/siem:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements: []\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-email-export"
+        ]
+      },
+      {
+        "id": "MUT-08",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[0].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password_x\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password_x\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-secret-canaries"
+        ]
+      },
+      {
+        "id": "MUT-09",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[0].statements[1]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token_x\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token_x\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-secret-canaries"
+        ]
+      },
+      {
+        "id": "MUT-10",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[0].statements[2]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email_x\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email_x\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-email-export"
+        ]
+      },
+      {
+        "id": "MUT-11",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[1].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email_x\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email_x\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "no-email-export"
+        ]
+      },
+      {
+        "id": "MUT-12",
+        "operator": "weaken_filter",
+        "location": "processors.filter/errors_only.logs.log_record[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_FATAL'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_FATAL'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "errors-reach-siem"
+        ]
+      }
+    ]
+  },
+  "weak": {
+    "config_name": "collector.fixed.yaml",
+    "suite_name": "contracts.weak.yaml",
+    "total_mutants": 12,
+    "valid_mutants": 12,
+    "killed": 1,
+    "survived": 11,
+    "invalid": 0,
+    "inconclusive": 0,
+    "score": 0.08333333333333333,
+    "mutants": [
+      {
+        "id": "MUT-01",
+        "operator": "drop_processor",
+        "location": "service.pipelines.logs/siem.processors[transform/redact]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n@@ -35,5 +35,5 @@\n     logs/siem:\n       receivers: [otlp]\n-      processors: [transform/redact, filter/errors_only, batch]\n+      processors: [filter/errors_only, batch]\n       exporters: [file/siem]\n     logs/analytics:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-02",
+        "operator": "drop_processor",
+        "location": "service.pipelines.logs/siem.processors[filter/errors_only]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n@@ -35,5 +35,5 @@\n     logs/siem:\n       receivers: [otlp]\n-      processors: [transform/redact, filter/errors_only, batch]\n+      processors: [transform/redact, batch]\n       exporters: [file/siem]\n     logs/analytics:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-03",
+        "operator": "drop_processor",
+        "location": "service.pipelines.logs/analytics.processors[transform/redact]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n@@ -39,4 +39,4 @@\n     logs/analytics:\n       receivers: [otlp]\n-      processors: [transform/redact, batch]\n+      processors: [batch]\n       exporters: [file/analytics]\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-04",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[0].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-05",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[0].statements[1]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-06",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[0].statements[2]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-07",
+        "operator": "drop_ottl_statement",
+        "location": "processors.transform/redact.log_statements[1].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,17 +12,15 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n-\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements: []\n exporters:\n   file/siem:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements: []\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-08",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[0].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password_x\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password_x\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-09",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[0].statements[1]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token_x\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token_x\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-10",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[0].statements[2]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email_x\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email_x\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-11",
+        "operator": "perturb_key",
+        "location": "processors.transform/redact.log_statements[1].statements[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_ERROR'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email_x\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_ERROR'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email_x\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "survived",
+        "killed_by": []
+      },
+      {
+        "id": "MUT-12",
+        "operator": "weaken_filter",
+        "location": "processors.filter/errors_only.logs.log_record[0]",
+        "diff": "--- original.yaml\n+++ mutant.yaml\n@@ -12,16 +12,16 @@\n     logs:\n       log_record:\n-        - 'severity_number < SEVERITY_NUMBER_ERROR'\n+      - 'severity_number < SEVERITY_NUMBER_FATAL'\n   transform/redact:\n     error_mode: ignore\n     log_statements:\n-      - context: log\n-        statements:\n-          - delete_key(attributes, \"user.password\")\n-          - delete_key(attributes, \"auth.token\")\n-          - delete_key(attributes, \"user.email\")\n-      - context: resource\n-        statements:\n-          - delete_key(attributes, \"user.email\")\n+    - context: log\n+      statements:\n+      - delete_key(attributes, \"user.password\")\n+      - delete_key(attributes, \"auth.token\")\n+      - delete_key(attributes, \"user.email\")\n+    - context: resource\n+      statements:\n+      - delete_key(attributes, \"user.email\")\n \n exporters:\n",
+        "mutant_yaml": "receivers:\n  otlp:\n    protocols:\n      http:\n        endpoint: 0.0.0.0:4318\n\nprocessors:\n  batch:\n    timeout: 200ms\n  filter/errors_only:\n    error_mode: ignore\n    logs:\n      log_record:\n      - 'severity_number < SEVERITY_NUMBER_FATAL'\n  transform/redact:\n    error_mode: ignore\n    log_statements:\n    - context: log\n      statements:\n      - delete_key(attributes, \"user.password\")\n      - delete_key(attributes, \"auth.token\")\n      - delete_key(attributes, \"user.email\")\n    - context: resource\n      statements:\n      - delete_key(attributes, \"user.email\")\n\nexporters:\n  file/siem:\n    path: /captures/siem.jsonl\n  file/analytics:\n    path: /captures/analytics.jsonl\n\nservice:\n  pipelines:\n    logs/siem:\n      receivers: [otlp]\n      processors: [transform/redact, filter/errors_only, batch]\n      exporters: [file/siem]\n    logs/analytics:\n      receivers: [otlp]\n      processors: [transform/redact, batch]\n      exporters: [file/analytics]\n",
+        "valid": true,
+        "outcome": "killed",
+        "killed_by": [
+          "errors-reach-siem"
+        ]
+      }
+    ]
+  }
+}

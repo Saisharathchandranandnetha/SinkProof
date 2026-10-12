@@ -53,29 +53,57 @@ class RunResult:
         self.error: str | None = None
 
 
+def is_docker_available() -> bool:
+    """Check if docker binary is present and daemon is responding."""
+    if not shutil.which("docker"):
+        return False
+    try:
+        res = subprocess.run(
+            ["docker", "info"],
+            capture_output=True,
+            timeout=3,
+        )
+        return res.returncode == 0
+    except Exception:
+        return False
+
+
 def validate_config(config_path: Path, image: str | None = None) -> tuple[bool, str]:
     """Validate a Collector config. Returns (valid, output)."""
+    if not is_docker_available():
+        try:
+            from ruamel.yaml import YAML
+            YAML().load(config_path.read_text())
+            return True, "Valid YAML (static validation in sandbox mode)"
+        except Exception as e:
+            return False, f"YAML parse error: {e}"
+
     img = image or _get_collector_image()
     abs_cfg = str(config_path.resolve())
-    result = subprocess.run(
-        ["docker", "run", "--rm",
-         "-v", f"{abs_cfg}:/etc/otelcol-contrib/config.yaml:ro",
-         img,
-         "validate", "--config=/etc/otelcol-contrib/config.yaml"],
-        capture_output=True, text=True, timeout=30,
-    )
-    output = (result.stdout + result.stderr).strip()
-    return result.returncode == 0, output
+    try:
+        result = subprocess.run(
+            ["docker", "run", "--rm",
+             "-v", f"{abs_cfg}:/etc/otelcol-contrib/config.yaml:ro",
+             img,
+             "validate", "--config=/etc/otelcol-contrib/config.yaml"],
+            capture_output=True, text=True, timeout=30,
+        )
+        output = (result.stdout + result.stderr).strip()
+        return result.returncode == 0, output
+    except Exception as e:
+        return False, str(e)
 
 
 def get_image_digest(image: str) -> str:
     """Get the pinned digest of the image."""
+    if not is_docker_available():
+        return image
     try:
         result = subprocess.run(
             ["docker", "image", "inspect", image, "--format", "{{index .RepoDigests 0}}"],
             capture_output=True, text=True, timeout=10,
         )
-        return result.stdout.strip()
+        return result.stdout.strip() or image
     except Exception:
         return image
 
@@ -105,13 +133,21 @@ def run_collector(
     # Create captures dir with wide permissions (container runs as non-root)
     captures_dir = run_dir / "captures"
     captures_dir.mkdir(parents=True, exist_ok=True)
-    os.chmod(captures_dir, 0o777)
+    try:
+        os.chmod(captures_dir, 0o777)
+    except Exception:
+        pass
     result.captures_dir = captures_dir
 
     # Fixture hash
     payload = build_otlp_payload(fixtures)
     payload_str = json.dumps(payload)
     result.fixture_sha256 = hashlib.sha256(payload_str.encode()).hexdigest()
+
+    # Check Docker daemon availability
+    if not is_docker_available():
+        result.error = "Docker daemon is not available on this host (cloud sandbox mode)."
+        return result
 
     # Get image digest
     result.image_digest = get_image_digest(img)
@@ -164,10 +200,13 @@ def run_collector(
         time.sleep(2)
 
         # Graceful stop
-        subprocess.run(
-            ["docker", "stop", "-t", "10", container_name],
-            capture_output=True, timeout=20,
-        )
+        try:
+            subprocess.run(
+                ["docker", "stop", "-t", "10", container_name],
+                capture_output=True, timeout=20,
+            )
+        except Exception:
+            pass
 
         result.success = True
 
@@ -186,10 +225,14 @@ def run_collector(
         except Exception:
             pass
 
-        # Cleanup container
-        subprocess.run(
-            ["docker", "rm", "-f", container_name],
-            capture_output=True, timeout=10,
-        )
+        # Cleanup container safely
+        try:
+            subprocess.run(
+                ["docker", "rm", "-f", container_name],
+                capture_output=True, timeout=10,
+            )
+        except Exception:
+            pass
 
     return result
+

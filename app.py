@@ -241,7 +241,6 @@ with col_v1:
                 cfg_kind = "vulnerable" if "vulnerable" in str(active_cfg_path) else "fixed"
                 fallback_dir = Path("examples/checkout/captures") / cfg_kind
                 if fallback_dir.exists():
-                    st.info("ℹ️ Running in Cloud Sandbox mode without Docker daemon — using verified capture telemetry.")
                     sink_map = {s_id: s_def.exporter for s_id, s_def in suite.sinks.items()}
                     captures = parse_captures(fallback_dir, sink_map)
                     run_meta = {
@@ -252,6 +251,7 @@ with col_v1:
                     }
                     summary = verify_suite(suite, fixture_set, captures, active_cfg_path, run_meta)
                     st.session_state.verification_summary = summary
+                    st.session_state.cloud_sandbox = True
                     st.rerun()
                 else:
                     st.error(f"Collector run failed: {run_res.error}")
@@ -266,10 +266,13 @@ with col_v1:
                 }
                 summary = verify_suite(suite, fixture_set, captures, active_cfg_path, run_meta)
                 st.session_state.verification_summary = summary
+                st.session_state.cloud_sandbox = False
                 st.rerun()
 
 with col_v2:
     if st.session_state.verification_summary:
+        if st.session_state.get("cloud_sandbox"):
+            st.info("☁️ **Cloud Sandbox Mode:** Streamlit Cloud environment detected (no host Docker daemon). Using pre-captured collector telemetry batches.")
         s = st.session_state.verification_summary
         m_c1, m_c2, m_c3, m_c4 = st.columns(4)
         m_c1.metric("Overall Verdict", s.overall_verdict)
