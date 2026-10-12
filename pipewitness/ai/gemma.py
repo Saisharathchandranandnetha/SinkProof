@@ -94,6 +94,11 @@ def _call_ollama_api(img_bytes: bytes, prompt_text: str, model_id: str) -> str:
         },
     }
     resp = httpx.post(f"{host}/api/generate", json=payload, headers=headers, timeout=120.0)
+    if resp.status_code == 400 and "multimodal" in resp.text.lower():
+        # Fallback to text-only for pure language models like gemma2:2b
+        payload.pop("images", None)
+        resp = httpx.post(f"{host}/api/generate", json=payload, headers=headers, timeout=120.0)
+
     resp.raise_for_status()
     data = resp.json()
     return data.get("response", "")
